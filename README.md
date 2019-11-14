@@ -1,3 +1,6 @@
+[![Gem Version](https://badge.fury.io/rb/rails_config.svg)](http://badge.fury.io/rb/rails_config)
+[![Dependency Status](https://gemnasium.com/railsjedi/rails_config.svg)](https://gemnasium.com/railsjedi/rails_config)
+
 # RailsConfig
 
 ## Summary
@@ -13,13 +16,13 @@ RailsConfig helps you easily manage environment specific Rails settings in an ea
 
 ## Compatibility
 
-* Rails 3.x
+* Rails 3.x and 4.x
 * Padrino
 * Sinatra
 
 For older versions of Rails and other Ruby apps, use [AppConfig](http://github.com/fredwu/app_config).
 
-## Installing on Rails 3
+## Installing on Rails 3 or 4
 
 Add this to your `Gemfile`:
 
@@ -89,6 +92,15 @@ Nested entries are supported:
 Settings.my_section.some_entry
 ```
 
+Alternatively, you can also use the `[]` operator if you don't know which exact setting you need to access ahead of time.
+
+```ruby
+# All the following are equivalent to Settings.my_section.some_entry
+Settings.my_section[:some_entry]
+Settings.my_section['some_entry']
+Settings[:my_section][:some_entry]
+```
+
 If you have set a different constant name for the object in the initializer file, use that instead.
 
 ## Common config file
@@ -98,6 +110,10 @@ Config entries are compiled from:
     config/settings.yml
     config/settings/#{environment}.yml
     config/environments/#{environment}.yml
+    
+    config/settings.local.yml
+    config/settings/#{environment}.local.yml
+    config/environments/#{environment}.local.yml    
 
 Settings defined in files that are lower in the list override settings higher.
 
@@ -136,6 +152,16 @@ Example production environment config file:
 #{Rails.root}/config/environments/production.yml
 ```
 
+### Developer specific config files
+
+If you want to have local settings, specific to your machine or development environment, 
+you can use the following files, which are automatically `.gitignored` :
+
+    Rails.root.join("config", "settings.local.yml").to_s,
+    Rails.root.join("config", "settings", "#{Rails.env}.local.yml").to_s,
+    Rails.root.join("config", "environments", "#{Rails.env}.local.yml").to_s
+
+
 ### Adding sources at Runtime
 
 You can add new YAML config files at runtime. Just use:
@@ -153,6 +179,9 @@ One thing I like to do for my Rails projects is provide a local.yml config file 
 Settings.add_source!("#{Rails.root}/config/settings/local.yml")
 Settings.reload!
 ```
+
+> Note: this is an example usage, it is easier to just use the default local files `settings.local.yml, settings/#{Rails.env}.local.yml and environments/#{Rails.env}.local.yml` 
+>       for your developer specific settings.
 
 ## Embedded Ruby (ERB)
 
@@ -205,8 +234,53 @@ Settings.section.servers[0].name # => yahoo.com
 Settings.section.servers[1].name # => amazon.com
 ```
 
+## Working with Heroku
+
+Heroku uses ENV object to store sensitive settings which are like the local files described above. You cannot upload such files to Heroku because it's ephemeral filesystem gets recreated from the git sources on each instance refresh.
+
+To use rails_config with Heroku just set the `use_env` var to `true` in your `config/initializers/rails_config.rb` file. Eg:
+
+```ruby
+RailsConfig.setup do |config|
+  config.const_name = 'AppSettings'
+  config.use_env = true
+end
+```
+
+Now rails_config would read values from the ENV object to the settings. For the example above it would look for keys starting with 'AppSettings'. Eg:
+
+```ruby
+ENV['AppSettings.section.size'] = 1
+ENV['AppSettings.section.server'] = 'google.com'
+```
+
+It won't work with arrays, though.
+
+To upload your local values to Heroku you could ran `bundle exec rake rails_config:heroku`.
+
+
+## Contributing
+
+Bootstrap
+
+```bash
+$ appraisal install
+```
+
+Running the test suite
+
+```bash
+$ appraisal rspec
+```
+
+
 ## Authors
 
 * [Jacques Crocker](http://github.com/railsjedi)
 * [Fred Wu](http://github.com/fredwu)
+* [Piotr Kuczynski](http://github.com/pkuczynski)
 * Inherited from [AppConfig](http://github.com/cjbottaro/app_config) by [Christopher J. Bottaro](http://github.com/cjbottaro)
+
+## License
+
+RailsConfig is released under the [MIT License](http://www.opensource.org/licenses/MIT).

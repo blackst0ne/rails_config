@@ -10,15 +10,14 @@ Gem::Specification.new do |s|
   # Но гем используется в проекте CampaignManagement, поэтому его пришлось форкнуть и научить работать с Rails 5.1
   # Изменения в форке:
   # 1. В lib/rails_config/integration/rails.rb изменён `prepend_before_filter` на `prepend_before_action`.
-  # 2. Обновлено имя гема, чтобы не перепутать с оригиналом: `rails_config` -> `funbox-rails_config`.
-  # 3. Обновлена версия гема, чтобы не перепутать с оригиналом: `0.4.2` -> `0.4.2-funbox`.
-  s.name             = "funbox-rails_config"
+  # 2. Обновлена версия гема, чтобы не перепутать с оригиналом: `0.4.2` -> `0.4.3`.
+  s.name             = "rails_config"
   s.version          = RailsConfig::VERSION
   s.date             = Time.now.strftime '%F'
   s.authors          = ["Jacques Crocker", "Fred Wu", "Piotr Kuczynski"]
   s.email            = ["railsjedi@gmail.com", "ifredwu@gmail.com", "piotr.kuczynski@gmail.com"]
   s.summary          = "Provides a Settings helper for Rails that reads from config/settings.yml"
-  s.description      = "Easy to use Settings helper that loads its data in from config/settings.yml. Handles adding multiple sources, and easy reloading."
+  s.description      = "Форк rails_config. Совместим с Rails 5.1"
   s.homepage         = "http://github.com/railsjedi/rails_config"
   s.license          = "MIT"
   s.extra_rdoc_files = ["README.md"]

@@ -5,7 +5,14 @@ require 'rails_config/version'
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name             = "rails_config"
+  # Привет, добрый друг!
+  # Это форк оригинального гема rails_config, который на данный момент (14.11.2019) уже протух.
+  # Но гем используется в проекте CampaignManagement, поэтому его пришлось форкнуть и научить работать с Rails 5.1
+  # Изменения в форке:
+  # 1. В lib/rails_config/integration/rails.rb изменён `prepend_before_filter` на `prepend_before_action`.
+  # 2. Обновлено имя гема, чтобы не перепутать с оригиналом: `rails_config` -> `funbox-rails_config`.
+  # 3. Обновлена версия гема, чтобы не перепутать с оригиналом: `0.4.2` -> `0.4.2-funbox`.
+  s.name             = "funbox-rails_config"
   s.version          = RailsConfig::VERSION
   s.date             = Time.now.strftime '%F'
   s.authors          = ["Jacques Crocker", "Fred Wu", "Piotr Kuczynski"]
